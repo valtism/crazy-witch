@@ -32,9 +32,9 @@ var cards = [
 function rotate(card) {
     var top = card.top;
     card.top = card.right;
-    card.right = card.left;
-    card.left = card.bottom;
-    card.bottom = top;
+    card.right = card.bottom;
+    card.bottom = card.left;
+    card.left = top;
     card.rotation = (card.rotation + 1) % 4;
 }
 
@@ -96,6 +96,7 @@ function main() {
             if(compareLeft(cardPerm[i], cardPerm) && compareTop(cardPerm[i], cardPerm)) {
                 if (i === cardPerm.length - 1) {
                     // End of array, log our valid output
+                    console.log(index + ":");
                     console.log(cardPerm);
                     solving = false;
                 } else {

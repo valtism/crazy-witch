@@ -7,14 +7,14 @@ Witch = {
     PurpleTail: -3,
     GreenHead: 4,
     GreenTail: -4
-}
+};
 
 function Card(top, right, bottom, left) {
     this.top = top,
     this.right = right,
     this.bottom = bottom,
     this.left = left,
-    this.rotation = 0
+    this.rotation = 0;
 }
 
 var cards = [
@@ -27,7 +27,7 @@ var cards = [
     new Card(Witch.RedTail, Witch.PurpleTail, Witch.GreenHead, Witch.PurpleHead),
     new Card(Witch.YellowTail, Witch.GreenHead, Witch.RedHead, Witch.GreenTail),
     new Card(Witch.RedTail, Witch.PurpleHead, Witch.YellowHead, Witch.GreenTail)
-]
+];
 
 function rotate(card) {
     var top = card.top;
@@ -43,20 +43,20 @@ const permutator = (inputArr) => {
 
     const permute = (arr, m = []) => {
         if (arr.length === 0) {
-            result.push(m)
+            result.push(m);
         } else {
             for (let i = 0; i < arr.length; i++) {
                 let curr = arr.slice();
                 let next = curr.splice(i, 1);
-                permute(curr.slice(), m.concat(next))
+                permute(curr.slice(), m.concat(next));
             }
         }
-    }
+    };
 
-    permute(inputArr)
+    permute(inputArr);
 
     return result;
-}
+};
 
 function compareLeft(card, cardArray) {
     var position = cardArray.indexOf(card);
@@ -88,41 +88,36 @@ function compareTop(card, cardArray) {
 
 function main() {
     cmb = permutator(cards);
-    var index = 0
+    var index = 0;
     cmb.forEach(function(cardPerm) {
-        debugger;
-        console.log(index);
-        var solvable = true;
+        var solving = true;
         var i = 0;
-        while(solvable) {
+        while(solving) {
             if(compareLeft(cardPerm[i], cardPerm) && compareTop(cardPerm[i], cardPerm)) {
                 if (i === cardPerm.length - 1) {
                     // End of array, log our valid output
                     console.log(cardPerm);
+                    solving = false;
                 } else {
                     // Increment to next card
                     i++;
                 }
             } else {
-                if (cardPerm[i].rotation !== 3) {
+                if (cardPerm[i].rotation < 3) {
                     rotate(cardPerm[i]);
                 } else {
-                    // Reset card position
-                    rotate(cardPerm[i]);
-                    i--;
                     // Backtrack
-                    if (cardPerm[i].rotation === 3 && i >= 0) {
-                        // Need a loop in case of multiple backtracks needed in a row
+                    while (cardPerm[i].rotation === 3 && solving) {
                         rotate(cardPerm[i]);
                         i--;
-                    } else {
-                        rotate(cardPerm[i]);
+                        if (i < 0) {
+                            solving = false;
+                            break;
+                        }
                     }
 
-                    if (i <= 0) {
-                        // All rotations have failed, new permutation needed
-                        solvable = false;
-                        console.log("nope");
+                    if (solving) {
+                        rotate(cardPerm[i]);
                     }
                 }
             }
